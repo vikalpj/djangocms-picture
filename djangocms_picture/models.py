@@ -23,7 +23,7 @@ class CmsStorageLazyObject(LazyObject):
     Class to create a lazy object for cms storage if specified.
     """
     def _setup(self):
-        self._wrapped = get_storage_class(import_path=getattr(settings, 'CMS_STORAGE', None)()
+        self._wrapped = get_storage_class(import_path=getattr(settings, 'CMS_STORAGE', None))()
 
 storage = CmsStorageLazyObject()
 
