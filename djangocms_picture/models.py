@@ -3,6 +3,8 @@ import os
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+from django.utils.functional import LazyObject
 
 from cms.models import CMSPlugin, Page
 try:
@@ -14,6 +16,16 @@ except ImportError:
         """
         return instance.get_media_path(filename)
 from cms.utils.compat.dj import python_2_unicode_compatible
+
+
+class CmsStorageLazyObject(LazyObject):
+    """
+    Class to create a lazy object for cms storage if specified.
+    """
+    def _setup(self):
+        self._wrapped = get_storage_class(import_path=getattr(settings, 'CMS_STORAGE', None)()
+
+storage = CmsStorageLazyObject()
 
 
 @python_2_unicode_compatible
@@ -29,7 +41,7 @@ class Picture(CMSPlugin):
                      (CENTER, _("center")),
                      )
 
-    image = models.ImageField(_("image"), upload_to=get_plugin_media_path)
+    image = models.ImageField(_("image"), storage=storage ,upload_to=get_plugin_media_path)
     url = models.CharField(
         _("link"), max_length=255, blank=True, null=True,
         help_text=_("If present, clicking on image will take user to link."))
