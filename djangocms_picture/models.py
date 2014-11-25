@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.utils.functional import LazyObject
+from django.core.files.storage import get_storage_class
 
 from cms.models import CMSPlugin, Page
 try:
